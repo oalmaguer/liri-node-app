@@ -2,6 +2,7 @@ require("dotenv").config();
 var axios = require("axios");
 var Spotify = require('node-spotify-api');
 var keys = require("./keys.js");
+var fs = require("fs");
 
 // var spotify = new Spotify(keys.spotify);
 
@@ -25,6 +26,7 @@ switch (action) {
         break;
 
     case "do-what-it-says":
+        doWhat();
         
         break;
 }
@@ -162,3 +164,33 @@ function movieInfo() {
         })
         }
 
+function doWhat () {
+
+
+fs.readFile("random.txt", "utf8", function(error, data) {
+    if (error) {
+        return console.log(error);
+    }
+    
+    var dataArray = data.split("+")
+    
+    console.log(dataArray);
+    spotifyInfo.action = dataArray[0];
+    spotifyInfo.query = dataArray[1];
+    spotifyInfo.type = 'track';
+    process.argv[2] = "node liri.js "+dataArray[0];
+    process.argv[3] = dataArray[1];
+
+    var command = process.argv[2] + " "+process.argv[3];
+
+    console.log(command);
+
+
+    
+
+
+   
+})
+
+
+}
