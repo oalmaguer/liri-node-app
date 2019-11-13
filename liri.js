@@ -26,8 +26,7 @@ switch (action) {
         break;
 
     case "do-what-it-says":
-        doWhat();
-        
+        defaultInput();
         break;
 }
 
@@ -164,33 +163,56 @@ function movieInfo() {
         })
         }
 
-function doWhat () {
+function defaultInput() {
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if (error) throw error;
+        console.log(data);
 
-
-fs.readFile("random.txt", "utf8", function(error, data) {
-    if (error) {
-        return console.log(error);
-    }
+        var spotify = new Spotify({
+            id: "10987fabeb5e49349e3ad8aac4b82126",
+            secret: "04e909efe8c644a4a5480f2b4f8bf480"
+          });
+          
+          spotify
+          .search({ type: 'track', query: data })
+          .then(function(response) {
     
-    var dataArray = data.split("+")
+           
+            for (var i=0;i<response.tracks.items.length;i++){
+            var obj = JSON.stringify(response.tracks.items[i].artists[0].name);
+            var obj2 = JSON.stringify(response.tracks.items[i].name);
+            var obj3 = JSON.stringify(response.tracks.items[i].preview_url);
+            var obj4 = JSON.stringify(response.tracks.items[i].album.name);
+          
+            console.log(`
+            The artist is: ${obj}
+            The song is: ${obj2}
+            The preview link is: ${obj3}
+            The album is: ${obj4}
+            -----------------------------`);
+                
+            }
+            
+          })
+          
+          
+        //client id 10987fabeb5e49349e3ad8aac4b82126 secret 04e909efe8c644a4a5480f2b4f8bf480 
+    .catch(function(error) {
+        if (error.response) {
+            console.log(error.response);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+        } else if (error.request ) {
+          console.log(error.request);
+        } else {
+            console.log("error ", error.message);
+        }
+        console.log(error.config);
+    })
+
+    })
+
     
-    console.log(dataArray);
-    spotifyInfo.action = dataArray[0];
-    spotifyInfo.query = dataArray[1];
-    spotifyInfo.type = 'track';
-    process.argv[2] = "node liri.js "+dataArray[0];
-    process.argv[3] = dataArray[1];
-
-    var command = process.argv[2] + " "+process.argv[3];
-
-    console.log(command);
-
-
-    
-
-
-   
-})
-
-
 }
+
+
