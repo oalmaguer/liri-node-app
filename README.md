@@ -33,3 +33,6 @@ Link to the file repository:
 https://github.com/oalmaguer/liri-node-app
 
 User that created the project: oalmaguer
+
+![](video1.gif)
+![](video2.gif)
